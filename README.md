@@ -1,217 +1,164 @@
-# Instructions
-- The test consists of five sections: Coding Challenge, System Design, Code Review, Problem-Solving and SQL Skills.
-- Complete the tasks in a local development environment.
-- Submit your solutions as a zip file containing source code files and documentation.
-- Time allotted: 8 hours.
+# Practical Test - Transaction API
 
-# Section 1: Coding Challenge
-## Task 1: API Development
-Build a simple RESTful API using .NET Core C# that manages a list of transactions. Each transaction should have the following properties:
+This is a RESTful API built with .NET Core that manages a list of transactions. The API uses Dapper for data access, implements CQRS pattern, and uses Oracle as the database.
 
-- AccountID
-- TransactionID
-- TransactionAmount
-- TransactionCurrencyCode
-- LocalHour
-- TransactionScenario
-- TransactionType
-- TransactionIPaddress
-- IpState
-- IpPostalCode
-- IpCountry
-- IsProxyIP
-- BrowserLanguage
-- PaymentInstrumentType
-- CardType
-- PaymentBillingPostalCode
-- PaymentBillingState
-- PaymentBillingCountryCode
-- ShippingPostalCode
-- ShippingState
-- ShippingCountry
-- CvvVerifyResult
-- DigitalItemCount
-- PhysicalItemCount
-- TransactionDateTime
+## Prerequisites
 
-**A sample with the data that can be used is provided in [Sales.txt](Sales.txt)**
+- .NET 7.0 SDK
+- Docker and Docker Compose (for running Oracle Database)
+- Visual Studio 2022 or VS Code
+- Heroku CLI (for deployment)
 
-The API should support the following operations:
+## Setup
 
-1. Get all transactions: GET /api/transactions
-2. Get a transaction by ID: GET /api/transactions/{id}
-3. Add a new transaction: POST /api/transactions
-4. Update a transaction: PUT /api/transactions/{id}
-5. Delete a transaction: DELETE /api/transactions/{id}
+### Option 1: Using Docker (Recommended for Local Development)
 
-**Requirements:**
+1. Clone the repository
+2. Start the Oracle Database container:
+```bash
+docker-compose up -d
+```
+3. Wait for the Oracle container to be ready (it may take a few minutes on first run)
+4. Update the connection string in `appsettings.json` with:
+```json
+"OracleConnection": "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));User Id=system;Password=your_password;"
+```
+5. Run the SQL script in `PracticalTest.Api/Data/Scripts/CreateTable.sql` to create the Transactions table
+6. Restore NuGet packages
+7. Build the solution
 
-- Use Dapper for data access;
-- Include input validation;
-- Implement appropriate error handling;
-- Write at least one unit test for each operation;
-- Use CQRS concepts;
-- Consider Oracle as the persistent storage database.
+### Option 2: Deploying to Heroku (Recommended for Online Development)
 
-# Section 2: System Design
-## Task 2: Design a Scalable System
-Design a system that can handle high traffic for a book recommendation service. The system should:
+1. Create a free Heroku account at https://signup.heroku.com/
 
-- Handle millions of users;
-- Provide personalized book recommendations;
-- Store user data and book metadata;
-- Be scalable and highly available.
+2. Install Heroku CLI:
+```bash
+# For macOS
+brew tap heroku/brew && brew install heroku
 
-**Deliverables:**
+# For Windows (using scoop)
+scoop install heroku
 
-- High-level architecture diagram (Draw.io can be used);
-- Explanation of the technologies and design patterns used;
-- Considerations for scalability, availability, and performance.
-
-# Section 3: Code Review
-## Task 3: Review the Following Code
-You have been provided with a snippet of code below. Review it and provide feedback on potential improvements, code quality, and best practices.
-```c#
-public class TransactionService
-{
-    private readonly List<Transaction> Transactions = new List<Transaction>();
-
-    public List<Transaction> GetTransactionByIdList(List<string> idList)
-    {
-        foreach (var transaction in Transactions)
-        {
-            foreach (var id in idList)
-            {
-                if (transaction.Id == id)
-                {
-                    return transaction;
-                }
-            }
-        }
-        return null;
-    }
-
-    public Transaction GetTransactionById(string id)
-    {
-        foreach (var transaction in Transactions)
-        {
-            if (transaction.Id == id)
-            {
-                return transaction;
-            }
-        }
-        return null;
-    }
-
-    public void AddTransaction(Transaction transaction)
-    {
-        Transactions.Add(transaction);
-    }
-
-    public void RemoveTransaction(string id)
-    {
-        var transaction = GetTransactionById(id);
-        if (transaction != null)
-        {
-            Transactions.Remove(transaction);
-        }
-    }
-}
+# For Linux
+curl https://cli-assets.heroku.com/install.sh | sh
 ```
 
-# Section 4: Problem-Solving
-## Task 4: Algorithm Challenge
-Write a C# function that checks if a string or a phrase is a palindrome.
-
-**Function Signature:**
-```c#
-public bool CheckPalindrome(string value);
+3. Login to Heroku:
+```bash
+heroku login
 ```
 
-**Example:**
-```
-Input: "rotor"
-Output: true
-
-Input: "motor"
-Output: false
+4. Create a new Heroku app:
+```bash
+heroku create practical-test-api
 ```
 
-**Requirements:**
-
-- Optimize for time and space complexity;
-- Use a recursive strategy;
-- Provide a brief explanation of your approach.
-
-# Section 5: SQL Skills
-## Task 5: Complex PL/SQL Query
-Consider the following database objects structure:
-
-**Customers Table:**
-- customer_id (NUMBER) - Unique identifier for each customer.
-- name (VARCHAR2) - Name of the customer.
-- email (VARCHAR2) - Email of the customer.
-- created_date (DATE) - The date the customer was created.
-
-**Orders Table:**
-- order_id (NUMBER) - Unique identifier for each order.
-- customer_id (NUMBER) - The ID of the customer who placed the order.
-- order_date (DATE) - The date the order was placed.
-- total_amount (NUMBER) - The total amount of the order.
-
-**Order_Items Table:**
-- order_item_id (NUMBER) - Unique identifier for each order item.
-- order_id (NUMBER) - The ID of the order to which this item belongs.
-- product_id (NUMBER) - The ID of the product.
-- quantity (NUMBER) - The quantity of the product ordered.
-- price (NUMBER) - The price of the product.
-
-**Products Table:**
-- product_id (NUMBER) - Unique identifier for each product.
-- product_name (VARCHAR2) - Name of the product.
-- category (VARCHAR2) - Category of the product.
-
-**Requirements**
-1. Write a PL/SQL block that retrieves the top 5 customers who have spent the most money on orders in the last 6 months. For each of these customers, retrieve the following details:
-- Customer ID
-- Customer Name
-- Total Amount Spent
-- The list of product names they purchased and their respective quantities
-
-2. Detailed Explanation: Include comments in your PL/SQL code explaining each step.
-
-## Deliverables
-- A SQL file containing the PL/SQL block.
-- Any assumptions or considerations taken.
-- Include test data insertion scripts if necessary to demonstrate the functionality.
-
-Example Output
-```yaml
-Customer ID: 123
-Customer Name: John Doe
-Total Amount Spent: $5000
-Products Purchased:
-    - Product A: 5 units
-    - Product B: 3 units
-
-Customer ID: 456
-Customer Name: Jane Smith
-Total Amount Spent: $4500
-Products Purchased:
-    - Product C: 2 units
-    - Product D: 4 units
-    ...
+5. Add the .NET buildpack:
+```bash
+heroku buildpacks:set heroku/dotnet
 ```
 
----
+6. Create a free PostgreSQL database (temporário para desenvolvimento):
+```bash
+heroku addons:create heroku-postgresql:hobby-dev
+```
 
-## Submission
-Please zip your solutions and submit them via e-mail to the sender provided during the interview. Include a README file with instructions on how to run your code and any other relevant information.
+7. Configure environment variables:
+```bash
+heroku config:set ASPNETCORE_ENVIRONMENT=Development
+```
 
-## Evaluation Criteria
-- Correctness and completeness of solutions;
-- Code quality and readability;
-- Adherence to best practices and design patterns;
-- Effective use of .NET Core features;
-- Problem-solving skills and algorithmic efficiency;
-- Clarity and thoroughness of documentation and explanations.
+8. Deploy the application:
+```bash
+git push heroku main
+```
+
+9. Open the application:
+```bash
+heroku open
+```
+
+## Running the Application
+
+### Local Development
+1. Open a terminal in the solution directory
+2. Run the following commands:
+
+```bash
+cd PracticalTest.Api
+dotnet run
+```
+
+The API will be available at `https://localhost:7001` and `http://localhost:5001`
+
+### Heroku Development
+The API will be available at `https://your-app-name.herokuapp.com`
+
+## API Endpoints
+
+- GET /api/transactions - Get all transactions
+- GET /api/transactions/{id} - Get a transaction by ID
+- POST /api/transactions - Create a new transaction
+- PUT /api/transactions/{id} - Update a transaction
+- DELETE /api/transactions/{id} - Delete a transaction
+
+## Running Tests
+
+To run the tests, use the following command:
+
+```bash
+dotnet test
+```
+
+## Project Structure
+
+- `PracticalTest.Api` - Main API project
+  - `Controllers` - API endpoints
+  - `Models` - Domain models
+  - `Data` - Data access layer
+  - `CQRS` - Commands and queries
+- `PracticalTest.Tests` - Unit tests
+
+## Technologies Used
+
+- .NET Core 7.0
+- Dapper
+- MediatR (CQRS)
+- Oracle Database
+- xUnit (Testing)
+- Moq (Mocking)
+- Swagger/OpenAPI
+
+## Troubleshooting
+
+### Docker Issues
+- If you get permission errors when pulling the Oracle image, you may need to login to Oracle Container Registry:
+```bash
+docker login container-registry.oracle.com
+```
+- If the container fails to start, check the logs:
+```bash
+docker-compose logs oracle
+```
+
+### Database Connection Issues
+- Make sure the Oracle container is running:
+```bash
+docker-compose ps
+```
+- Check if you can connect to the database using SQL*Plus or another Oracle client
+- Verify the connection string in `appsettings.json` matches your setup
+
+### Heroku Issues
+- Check the logs:
+```bash
+heroku logs --tail
+```
+- Verify environment variables:
+```bash
+heroku config
+```
+- Restart the application if needed:
+```bash
+heroku restart
+```

@@ -1,0 +1,20 @@
+{
+  "name": "Practical Test API",
+  "description": "A RESTful API for managing transactions",
+  "repository": "https://github.com/yourusername/practical-test",
+  "keywords": ["dotnet", "api", "oracle"],
+  "env": {
+    "ASPNETCORE_ENVIRONMENT": {
+      "value": "Development"
+    },
+    "ORACLE_CONNECTION": {
+      "description": "Oracle connection string",
+      "value": "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=your-oracle-host)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));User Id=system;Password=your_password;"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/dotnet"
+    }
+  ]
+} 
