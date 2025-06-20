@@ -25,13 +25,15 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 var oracleConn = Environment.GetEnvironmentVariable("OracleConnection") 
     ?? builder.Configuration.GetConnectionString("OracleConnection");
 
-if (!string.IsNullOrEmpty(oracleConn))
+// Se a string de conexão está vazia, nula ou igual ao valor padrão, usa in-memory
+var defaultOracleConn = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));User Id=system;Password=your_password;";
+if (string.IsNullOrWhiteSpace(oracleConn) || oracleConn == defaultOracleConn)
 {
-    builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+    builder.Services.AddSingleton<ITransactionRepository, InMemoryTransactionRepository>();
 }
 else
 {
-    builder.Services.AddSingleton<ITransactionRepository, InMemoryTransactionRepository>();
+    builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 }
 
 // Add Memory Cache
