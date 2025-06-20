@@ -47,7 +47,7 @@ app.UseSwaggerUI();
 // Add global exception handling
 app.UseMiddleware<GlobalExceptionHandler>();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
