@@ -22,7 +22,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 // Add Repository
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+var oracleConn = Environment.GetEnvironmentVariable("OracleConnection") 
+    ?? builder.Configuration.GetConnectionString("OracleConnection");
+
+if (!string.IsNullOrEmpty(oracleConn))
+{
+    builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+}
+else
+{
+    builder.Services.AddSingleton<ITransactionRepository, InMemoryTransactionRepository>();
+}
 
 // Add Memory Cache
 builder.Services.AddMemoryCache();
@@ -30,11 +40,9 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Sempre habilitar Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Add global exception handling
 app.UseMiddleware<GlobalExceptionHandler>();
@@ -44,5 +52,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Após configurar os serviços, popular dados de exemplo se usando in-memory
+var inMemoryRepo = app.Services.GetService<ITransactionRepository>() as InMemoryTransactionRepository;
+inMemoryRepo?.SeedExampleData();
 
 app.Run(); 
