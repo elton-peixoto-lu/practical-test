@@ -32,6 +32,6 @@ jobs:
 
       - name: Run Docker container (test)
         run: |
-          docker run -d -p 8080:80 --name test-api practical-test-api
+          docker run -d -p 8080:5000 --name test-api practical-test-api
           sleep 10
           docker ps -a 
