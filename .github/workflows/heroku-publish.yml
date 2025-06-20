@@ -1,0 +1,39 @@
+name: Build and Deploy .NET to Heroku
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Publish .NET app (self-contained)
+        run: dotnet publish PracticalTest.Api/PracticalTest.Api.csproj -c Release -r linux-x64 --self-contained true -o publish
+
+      - name: Prepare Heroku deploy
+        run: |
+          cp Procfile publish/
+          cd publish
+          git init
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .
+          git commit -m "Heroku deploy"
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          cd publish
+          git push --force https://heroku:${HEROKU_API_KEY}@git.heroku.com/practical-test-api.git HEAD:main 
