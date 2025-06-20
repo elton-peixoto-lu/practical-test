@@ -82,7 +82,22 @@ namespace PracticalTest.Tests.Controllers
         public async Task Create_ValidTransaction_ReturnsCreatedResult()
         {
             // Arrange
-            var transaction = new Transaction { TransactionID = "1", AccountID = "A1" };
+            var transaction = new Transaction {
+                TransactionID = "1",
+                AccountID = "A1",
+                TransactionAmount = 100.0m,
+                TransactionCurrencyCode = "USD",
+                LocalHour = 10,
+                TransactionScenario = "Online",
+                TransactionType = "Purchase",
+                TransactionIPaddress = "127.0.0.1",
+                IpCountry = "US",
+                BrowserLanguage = "en-US",
+                PaymentInstrumentType = "CreditCard",
+                DigitalItemCount = 1,
+                PhysicalItemCount = 1,
+                TransactionDateTime = DateTime.UtcNow
+            };
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<CreateTransactionCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(transaction);
@@ -100,7 +115,22 @@ namespace PracticalTest.Tests.Controllers
         public async Task Update_ValidTransaction_ReturnsOkResult()
         {
             // Arrange
-            var transaction = new Transaction { TransactionID = "1", AccountID = "A1" };
+            var transaction = new Transaction {
+                TransactionID = "1",
+                AccountID = "A1",
+                TransactionAmount = 100.0m,
+                TransactionCurrencyCode = "USD",
+                LocalHour = 10,
+                TransactionScenario = "Online",
+                TransactionType = "Purchase",
+                TransactionIPaddress = "127.0.0.1",
+                IpCountry = "US",
+                BrowserLanguage = "en-US",
+                PaymentInstrumentType = "CreditCard",
+                DigitalItemCount = 1,
+                PhysicalItemCount = 1,
+                TransactionDateTime = DateTime.UtcNow
+            };
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateTransactionCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(transaction);
@@ -118,7 +148,22 @@ namespace PracticalTest.Tests.Controllers
         public async Task Update_NonExistingTransaction_ReturnsNotFound()
         {
             // Arrange
-            var transaction = new Transaction { TransactionID = "1", AccountID = "A1" };
+            var transaction = new Transaction {
+                TransactionID = "1",
+                AccountID = "A1",
+                TransactionAmount = 100.0m,
+                TransactionCurrencyCode = "USD",
+                LocalHour = 10,
+                TransactionScenario = "Online",
+                TransactionType = "Purchase",
+                TransactionIPaddress = "127.0.0.1",
+                IpCountry = "US",
+                BrowserLanguage = "en-US",
+                PaymentInstrumentType = "CreditCard",
+                DigitalItemCount = 1,
+                PhysicalItemCount = 1,
+                TransactionDateTime = DateTime.UtcNow
+            };
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateTransactionCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Transaction)null!);
