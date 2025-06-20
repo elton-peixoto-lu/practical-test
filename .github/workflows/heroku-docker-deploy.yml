@@ -1,0 +1,36 @@
+name: Deploy Docker to Heroku
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Heroku Container Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build Docker image
+        run: docker build -t registry.heroku.com/practical-test-api/web .
+
+      - name: Push Docker image
+        run: docker push registry.heroku.com/practical-test-api/web
+
+      - name: Release app
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          IMAGE_ID=$(docker inspect registry.heroku.com/practical-test-api/web --format={{.Id}})
+          curl -n -X PATCH https://api.heroku.com/apps/practical-test-api/formation \
+            -d '{ "updates": [ { "type": "web", "docker_image": "'$IMAGE_ID'" } ] }' \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+            -H "Authorization: Bearer $HEROKU_API_KEY" 
