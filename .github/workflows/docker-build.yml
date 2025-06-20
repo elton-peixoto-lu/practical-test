@@ -1,0 +1,23 @@
+name: Build and Test Docker image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t practical-test-api .
+
+      - name: Run Docker container (test)
+        run: |
+          docker run -d -p 8080:80 --name test-api practical-test-api
+          sleep 10
+          docker ps -a 
