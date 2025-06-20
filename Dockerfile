@@ -9,4 +9,5 @@ RUN dotnet publish PracticalTest.Api/PracticalTest.Api.csproj -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "PracticalTest.Api.dll"] 
