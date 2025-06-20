@@ -57,7 +57,7 @@ app.MapControllers();
 if (app.Services.GetService<ITransactionRepository>() is InMemoryTransactionRepository)
 {
     InMemoryTransactionRepository.SeedExampleData();
-    InMemoryTransactionRepository.ImportFromSalesTxt("../Sales.txt");
+    InMemoryTransactionRepository.ImportFromSalesTxt("Sales.txt");
 }
 
 app.Run(); 
