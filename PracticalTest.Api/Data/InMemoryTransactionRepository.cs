@@ -108,7 +108,7 @@ namespace PracticalTest.Api.Data
         {
             if (!File.Exists(filePath)) return;
 
-            var lines = File.ReadAllLines(filePath);
+            var lines = File.ReadAllLines(filePath).Skip(1); // Pula o cabeçalho
             foreach (var line in lines)
             {
                 // Supondo que o arquivo seja CSV com os campos na ordem correta
