@@ -8,8 +8,8 @@ namespace PracticalTest.Tests
         [Fact]
         public void CanCreateTransaction()
         {
-            var transaction = new Transaction { AccountID = 1, TransactionID = 1 };
-            Assert.Equal(1, transaction.AccountID);
+            var transaction = new Transaction { AccountID = "A1", TransactionID = "T1" };
+            Assert.Equal("A1", transaction.AccountID);
         }
     }
 }

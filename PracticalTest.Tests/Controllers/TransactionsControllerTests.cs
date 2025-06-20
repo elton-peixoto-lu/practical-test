@@ -41,7 +41,7 @@ namespace PracticalTest.Tests.Controllers
             var result = await _controller.GetAll();
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<Transaction>>(okResult.Value);
             Assert.Equal(2, returnValue.Count);
         }
@@ -59,7 +59,7 @@ namespace PracticalTest.Tests.Controllers
             var result = await _controller.GetById("1");
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Transaction>(okResult.Value);
             Assert.Equal("1", returnValue.TransactionID);
         }
@@ -69,13 +69,13 @@ namespace PracticalTest.Tests.Controllers
         {
             // Arrange
             _mediatorMock.Setup(m => m.Send(It.IsAny<GetTransactionQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Transaction)null);
+                .ReturnsAsync((Transaction)null!);
 
             // Act
             var result = await _controller.GetById("1");
 
             // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace PracticalTest.Tests.Controllers
             var result = await _controller.Create(transaction);
 
             // Assert
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var returnValue = Assert.IsType<Transaction>(createdResult.Value);
             Assert.Equal("1", returnValue.TransactionID);
         }
@@ -109,7 +109,7 @@ namespace PracticalTest.Tests.Controllers
             var result = await _controller.Update("1", transaction);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Transaction>(okResult.Value);
             Assert.Equal("1", returnValue.TransactionID);
         }
@@ -121,13 +121,13 @@ namespace PracticalTest.Tests.Controllers
             var transaction = new Transaction { TransactionID = "1", AccountID = "A1" };
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateTransactionCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Transaction)null);
+                .ReturnsAsync((Transaction)null!);
 
             // Act
             var result = await _controller.Update("1", transaction);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
