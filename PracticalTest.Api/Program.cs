@@ -54,7 +54,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Após configurar os serviços, popular dados de exemplo se usando in-memory
-var inMemoryRepo = app.Services.GetService<ITransactionRepository>() as InMemoryTransactionRepository;
-inMemoryRepo?.SeedExampleData();
+if (app.Services.GetService<ITransactionRepository>() is InMemoryTransactionRepository)
+{
+    InMemoryTransactionRepository.SeedExampleData();
+    InMemoryTransactionRepository.ImportFromSalesTxt("../Sales.txt");
+}
 
 app.Run(); 

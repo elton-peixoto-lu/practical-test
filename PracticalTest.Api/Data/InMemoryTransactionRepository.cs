@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PracticalTest.Api.Models;
+using System.IO;
 
 namespace PracticalTest.Api.Data
 {
@@ -100,6 +101,50 @@ namespace PracticalTest.Api.Data
                         TransactionDateTime = DateTime.UtcNow.AddDays(-2)
                     }
                 });
+            }
+        }
+
+        public static void ImportFromSalesTxt(string filePath)
+        {
+            if (!File.Exists(filePath)) return;
+
+            var lines = File.ReadAllLines(filePath);
+            foreach (var line in lines)
+            {
+                // Supondo que o arquivo seja CSV com os campos na ordem correta
+                var parts = line.Split(',');
+                if (parts.Length < 25) continue; // Ajuste conforme o número de campos
+
+                var transaction = new Transaction
+                {
+                    AccountID = parts[0],
+                    TransactionID = parts[1],
+                    TransactionAmount = decimal.TryParse(parts[2], out var amt) ? amt : 0,
+                    TransactionCurrencyCode = parts[3],
+                    LocalHour = int.TryParse(parts[4], out var lh) ? lh : 0,
+                    TransactionScenario = parts[5],
+                    TransactionType = parts[6],
+                    TransactionIPaddress = parts[7],
+                    IpState = parts[8],
+                    IpPostalCode = parts[9],
+                    IpCountry = parts[10],
+                    IsProxyIP = parts[11] == "1" || parts[11].ToLower() == "true",
+                    BrowserLanguage = parts[12],
+                    PaymentInstrumentType = parts[13],
+                    CardType = parts[14],
+                    PaymentBillingPostalCode = parts[15],
+                    PaymentBillingState = parts[16],
+                    PaymentBillingCountryCode = parts[17],
+                    ShippingPostalCode = parts[18],
+                    ShippingState = parts[19],
+                    ShippingCountry = parts[20],
+                    CvvVerifyResult = parts[21],
+                    DigitalItemCount = int.TryParse(parts[22], out var dcnt) ? dcnt : 0,
+                    PhysicalItemCount = int.TryParse(parts[23], out var pcnt) ? pcnt : 0,
+                    TransactionDateTime = DateTime.TryParse(parts[24], out var dt) ? dt : DateTime.UtcNow
+                };
+
+                _transactions.Add(transaction);
             }
         }
     }
