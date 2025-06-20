@@ -5,7 +5,6 @@ using PracticalTest.Api.CQRS.Commands;
 using PracticalTest.Api.CQRS.Queries;
 using PracticalTest.Api.Models;
 using MediatR;
-using PracticalTest.Api.Queries;
 
 namespace PracticalTest.Api.Controllers
 {
@@ -36,7 +35,7 @@ namespace PracticalTest.Api.Controllers
                 return BadRequest("ID não pode ser nulo ou vazio");
             }
 
-            var query = new GetTransactionByIdQuery(id);
+            var query = new GetTransactionQuery(id);
             var result = await _mediator.Send(query);
 
             if (result == null)
