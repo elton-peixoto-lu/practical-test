@@ -55,3 +55,5 @@ Este projeto já está pronto para deploy no Heroku usando Docker, seguindo o pa
 - O Dockerfile já está pronto para produção e expõe a porta correta para o Heroku.
 
 Se precisar rodar o deploy manualmente, basta acessar o GitHub Actions, selecionar o workflow "Deploy Docker to Heroku" e clicar em "Run workflow".
+
+<!-- Trigger redeploy: ajuste forçado para garantir build/push Docker no Heroku -->
