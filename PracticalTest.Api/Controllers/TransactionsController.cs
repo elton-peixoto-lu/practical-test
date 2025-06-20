@@ -10,6 +10,7 @@ namespace PracticalTest.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class TransactionsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -42,7 +42,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 // Sempre habilitar Swagger
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Practical Test API v1");
+    c.RoutePrefix = "swagger";
+});
 
 // Add global exception handling
 app.UseMiddleware<GlobalExceptionHandler>();
