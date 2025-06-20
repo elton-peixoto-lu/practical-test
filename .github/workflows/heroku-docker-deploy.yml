@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run tests in Docker
+      - name: Run tests with .NET SDK Docker image
         run: |
-          docker build -t practical-test-api .
-          docker run --rm -v $(pwd):/src -w /src practical-test-api dotnet test
+          docker run --rm -v ${{ github.workspace }}:/src -w /src mcr.microsoft.com/dotnet/sdk:6.0 dotnet test
 
   deploy:
     needs: test
