@@ -7,6 +7,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Heroku: escutar na porta definida pela variável de ambiente PORT
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 // Add services to the container.
 builder.Services.AddControllers();
 
